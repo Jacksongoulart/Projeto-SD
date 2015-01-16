@@ -3,7 +3,9 @@ import urllib
 from cgi import parse_qs, escape #metodos para quebrar url
 from urllib2 import Request, urlopen, URLError, HTTPError
 
-#A biblioteca urllib2 utiliza a biblioteca httplib, que por sua vez utiliza a biblioteca de socket. Porem configuracoes a nivel de sockets pode ser feitas, como a insercao de um timeout de resposta do servidor, importando-se a biblioteca socket 
+#A biblioteca urllib2 utiliza a biblioteca httplib, 
+# que utiliza a biblioteca de socket. 
+# configuracoes a nivel de sockets pode ser feitas como a insercao de um timeout de resposta do servidor: importando-se a biblioteca socket 
 
 def client(url_req):
 	httplib.HTTPConnection._http_vsn = 10

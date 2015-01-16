@@ -19,7 +19,7 @@ class PythonServer:
             self.socket.bind((self.host, self.port))
         except Exception as e:
             print "Unable to serve at port", self.port
-            self.shutdown()	
+            self.shutdown()
 
         print "Server successfully acquired the socket with port:", self.port
         print "Press Ctrl+C to shut down the server and exit."
@@ -41,7 +41,7 @@ class PythonServer:
             request = RequestHandler(self.socket.accept(), self.www_dir)
             request.start()
 
-###########################################################
+#########################################################################
 
 class RequestHandler(threading.Thread):
     def __init__(self, (conn, addr), www_dir='.'):
@@ -53,11 +53,12 @@ class RequestHandler(threading.Thread):
         print "Got connection from:", addr
 
     def run(self):
-        data = self.conn.recv(self.size) #recebe os dados do cliente
-        string = bytes.decode(data) #decodifica em string
+        data = self.conn.recv(self.size)	#recebe os dados do cliente
+        string = bytes.decode(data) 		#decodifica em string
 
         request_method = string.split(' ')[0]
         methods = {
+	  # aqui eu coloco os outros metodos como create, update, delete?
             'GET': self.GET,
             'POST': self.POST
         }
