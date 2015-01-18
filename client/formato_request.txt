@@ -1,0 +1,9 @@
+operacao?campo="valor"
+String para passar para enviar: end_ip/addUser?email="email@email"&senha="123"&...
+funcoes:
+addUser -> manda os dados que tiver enviado (obrigatoriamente email e senha)
+deleteUser -> manda o email,senha
+loginUser -> email,senha
+readUser -> [lista de dados que quer ler]
+end_ip/readUser?email=valor@valor.com&campos="nome|email|senha|..."
+updateUser -> end_ip/updateUser?email=valor@valor.com&nome="novonome"&....
