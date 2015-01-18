@@ -6,8 +6,9 @@ import os.path
 
 class PythonServer:
 
-    def __init__(self, port, dir='.'):
+    def __init__(self, port, dir='.', identifier):
         """ Constructor """
+        self.identifier = identifier
         self.host = ''
         self.port = port
         self.www_dir = dir # Diretorio do servidor
@@ -69,15 +70,13 @@ class RequestHandler(threading.Thread):
         print "Closing connection with client:", self.addr, "\n"
         self.conn.close()
 
-
     def GET(self, string):
-        file_requested = string.split(' ') # Separa no espaco: "GET /file.html" -> ('GET','file.html',...)
-        file_requested = file_requested[1] # Pega o segundo elemento: 'file.html'
+        file_requested = string.split(' ') 		# Separa no espaco: "GET /file.html" -> ('GET','file.html',...)
+        file_requested = file_requested[1] 		# Pega o segundo elemento: 'file.html'
+        file_requested = file_requested.split('?')[0]  	# Ignora qualquer coisa depois do '?'
 
-        file_requested = file_requested.split('?')[0]  # Ignora qualquer coisa depois do ?
-
-        if (file_requested == '/'):  # Caso o cliente nao especifique o arquivo,
-            file_requested = '/index.html' # a requisicao vai para o index.html
+        if (file_requested == '/'):  			# Caso o cliente nao especifique o arquivo,
+            file_requested = '/index.html' 		# a requisicao vai para o index.html
 
         file_requested = self.www_dir + file_requested
         print "Serving GET for web page [",file_requested,"]\n"
@@ -97,14 +96,14 @@ class RequestHandler(threading.Thread):
         self.conn.send(response_content)
 
     def POST(self, string):
-        request = string.split(' ') # Separa no espaco e pega o segundo elemento: '/modulo'
-        module = request[1].split('/')[1] # Separa na funcao chamada: modulo
-        args = request[len(request)-1].split('\n') # Separa nas quebras de linha do ultimo elemento do request
-        args = args[len(args)-1].split('&')  # Pega a ultima posicao e separa pelo '&'
+        request = string.split(' ') 			# Separa no espaco e pega o segundo elemento: '/modulo'
+        module = request[1].split('/')[1] 		# Separa na funcao chamada: modulo
+        args = request[len(request)-1].split('\n') 	# Separa nas quebras de linha do ultimo elemento do request
+        args = args[len(args)-1].split('&')  		# Pega a ultima posicao e separa pelo '&'
         arguments = {}
         for i in range(len(args)):
             arg = args[i].split('=')
-            arguments[arg[0]] = arg[1]
+            arguments[arg[0]] = arg[1]			#???????????????????????????????
         newDir = self.www_dir + '/bin/'
         file_path = newDir + module + '.py'
         sys.path.append(newDir)
