@@ -1,3 +1,1 @@
-data1=|=|t2|t1
-data2=|=|t2|t1
-data3=|=|t2|t1
+email1@email|senha1|nome1|F|10/10/10
