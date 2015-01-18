@@ -95,22 +95,26 @@ class RequestHandler(threading.Thread):
 
         self.conn.send(response_content)
 
+      # calcula o valor  
+    def hashFunction(self, key)
+      return sum([ord(c) for c in key]) % self.routersNumber
+    
+      # obtem a key a partir da request
+    def getKey(self, string)
+      return string.split(' ')[1].split('&')[0].split('=')[1]
+      
+      # obtem o idServer relacionado a key
+    def getServer(self,string)
+      return self.hashFunction(self.getKey(string))
+
     def POST(self, string):
-        request = string.split(' ') 			# Separa no espaco e pega o segundo elemento: '/modulo'
-        module = request[1].split('/')[1] 		# Separa na funcao chamada: modulo
-        args = request[len(request)-1].split('\n') 	# Separa nas quebras de linha do ultimo elemento do request
-        args = args[len(args)-1].split('&')  		# Pega a ultima posicao e separa pelo '&'
-        arguments = {}
-        for i in range(len(args)):
-            arg = args[i].split('=')
-            arguments[arg[0]] = arg[1]			#???????????????????????????????
-        newDir = self.www_dir + '/bin/'
-        file_path = newDir + module + '.py'
-        sys.path.append(newDir)
-        if os.path.isfile(file_path):
-            mod = __import__(module)
-            ret = getattr(mod, module)(arguments)
-            response = 'HTTP/1.0 200 OK\nContent-Type: text/html;charset=utf-8\n\n<html>'+str(ret)+'</html>\n'
-        else:
-            response = 'HTTP/1.0 404 NOT FOUND'
-        self.conn.send(response)
+      # Separa no espaco e pega o segundo elemento: '/modulo'
+      hashValue = self.getServer(string)
+      # se for dele
+      if (hashValue == self.identifier):
+	db = userDB.UserDB()
+	response = db.processRequest(string)
+      # senao, manda request para outro router  
+      else:
+	pythonclient.client(string,hashValue)
+      self.conn.send(response)
