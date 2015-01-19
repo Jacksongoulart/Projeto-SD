@@ -7,7 +7,7 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 # que utiliza a biblioteca de socket. 
 # configuracoes a nivel de sockets pode ser feitas como a insercao de um timeout de resposta do servidor: importando-se a biblioteca socket 
 
-def client(url_req, routerId):
+def client(url_req):
 	httplib.HTTPConnection._http_vsn = 10
 	httplib.HTTPConnection._http_vsn_str = 'HTTP/1.0'
 

@@ -54,7 +54,7 @@ class RequestHandler(threading.Thread):
 	    threading.Thread.__init__(self)
 	    self.serversNumber = serversNumber
 	    self.identifier = identifier
-	    server.serverMap = serverMap
+	    self.serverMap = serverMap
 	    self.conn = conn
 	    self.addr = addr
 	    self.size = 1024
@@ -110,13 +110,15 @@ class RequestHandler(threading.Thread):
 		# print string
 		# Separa no espaco e pega o segundo elemento: '/modulo'
 		hashValue = self.getServer(data)
+		rq = method+'?'+data
 		# se for dele
 		if hashValue == self.identifier:
 			db = UserDB()
-			response = db.processRequest(method+'?'+data)
+			response = db.processRequest(rq)
 	  	# senao, manda request para outro router  
 	 	else:
-			pythonclient.client(string,hashValue)
+			string = self.serverMap[hashValue]+'/'+rq
+			response = pythonclient.client(string)
 		response = 'HTTP/1.0 200 OK\nContent-Type: text/html;charset=utf-8\n\n<html>'+response+'</html>\n'
 		print response
   		self.conn.send(response)
