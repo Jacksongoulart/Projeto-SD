@@ -1,6 +1,6 @@
 from client_http import client
 
-ip = "http://localhost/"
+ip = "http://localhost:8001/"
 
 '''
 	operacao?campo="valor"
@@ -73,7 +73,8 @@ def excluir(dados):
 	url = ip+"deleteUser?"+"email="+email+"&"+"senha="+senha
 	return (True,url)
 
-print excluir(("aa@aa","123"))
+# print excluir(("aa@aa","123"))
 	
 	
 
+# executa_operacao_api('criar','email=julia@julia&senha=123')
