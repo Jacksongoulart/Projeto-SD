@@ -1,7 +1,8 @@
 import pythonserver
 import pythonclient
 import sys
-sys.path.append('../banco/') from userDB import *
+sys.path.append('../banco/')
+from userDB import *
 
 class PythonRouter:
 

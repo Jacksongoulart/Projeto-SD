@@ -1,13 +1,18 @@
 import socket  # Networking support
 import sys
+import signal
+sys.path.append('../banco/')
+from userDB import *
 import threading
 import os
 import os.path
 
 class PythonServer:
 
-    def __init__(self, port, dir='.', identifier):
+    def __init__(self, port, serversNumber, identifier, serverMap, dir='.'):
         """ Constructor """
+        self.serverMap = serverMap
+        self.serversNumber = serversNumber
         self.identifier = identifier
         self.host = ''
         self.port = port
@@ -81,6 +86,18 @@ class RequestHandler(threading.Thread):
         file_requested = self.www_dir + file_requested
         print "Serving GET for web page [",file_requested,"]\n"
 
+	def POST(self, string):
+		# Separa no espaco e pega o segundo elemento: '/modulo'
+		hashValue = self.getServer(string)
+		# se for dele
+		if hashValue == self.identifier:
+			db = UserDB()
+			response = db.processRequest(string)
+	  	# senao, manda request para outro router  
+	 	else:
+			pythonclient.client(string,hashValue)
+	  		self.conn.send(response)
+
      ## Load file content
         try:
             file_handler = open(file_requested,'rb')
@@ -95,26 +112,22 @@ class RequestHandler(threading.Thread):
 
         self.conn.send(response_content)
 
-      # calcula o valor  
-    def hashFunction(self, key)
-      return sum([ord(c) for c in key]) % self.routersNumber
-    
-      # obtem a key a partir da request
-    def getKey(self, string)
-      return string.split(' ')[1].split('&')[0].split('=')[1]
-      
-      # obtem o idServer relacionado a key
-    def getServer(self,string)
-      return self.hashFunction(self.getKey(string))
+		# calcula o valor  
+	def hashFunction(self, key):
+		return sum([ord(c) for c in key]) % self.serverNumber
 
-    def POST(self, string):
-      # Separa no espaco e pega o segundo elemento: '/modulo'
-      hashValue = self.getServer(string)
-      # se for dele
-      if (hashValue == self.identifier):
-	db = userDB.UserDB()
-	response = db.processRequest(string)
-      # senao, manda request para outro router  
-      else:
-	pythonclient.client(string,hashValue)
-      self.conn.send(response)
+		# obtem a key a partir da request
+	def getKey(self, string):
+		return string.split(' ')[1].split('&')[0].split('=')[1]
+	  
+		# obtem o idServer relacionado a key
+	def getServer(self,string):
+		return self.hashFunction(self.getKey(string))
+
+def graceful_shutdown(sig, dummy):
+    server.shutdown()
+
+signal.signal(signal.SIGINT, graceful_shutdown)
+server = PythonServer(8000, 1, 0, ['localhost'])
+server.activate_server()
+server.wait_for_connections()
